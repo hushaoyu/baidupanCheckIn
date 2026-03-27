@@ -25,7 +25,6 @@ except ImportError:
     print("⚠️  未加载通知模块，跳过通知功能")
 
 # 配置项
-BAIDU_COOKIE = os.environ.get('BAIDU_COOKIE', '')
 privacy_mode = os.getenv("PRIVACY_MODE", "true").lower() == "true"
 
 HEADERS = {
@@ -322,7 +321,9 @@ def main():
     # 显示配置状态
     print(f"🔒 隐私保护模式: {'已启用' if privacy_mode else '已禁用'}")
     
-
+    # 读取环境变量
+    BAIDU_COOKIE = os.environ.get('BAIDU_COOKIE', '')
+    print(f"🔍 BAIDU_COOKIE 环境变量长度: {len(BAIDU_COOKIE)}")
     
     # 获取Cookie配置
     baidu_cookies = BAIDU_COOKIE
