@@ -14,6 +14,7 @@ permissions:
 jobs:
   checkin:
     runs-on: ubuntu-latest
+    environment: variables
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
