@@ -29,12 +29,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Set environment variables
+      - name: Create config.py from secrets
         run: |
-          echo "BAIDU_COOKIE=${{ secrets.BAIDU_COOKIE }}" >> $GITHUB_ENV
-          echo "PRIVACY_MODE=true" >> $GITHUB_ENV
-          echo "NOTIFY_METHOD=${{ secrets.NOTIFY_METHOD || 'feishu' }}" >> $GITHUB_ENV
-          echo "WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}" >> $GITHUB_ENV
+          cat > config.py << EOF
+          # 百度网盘签到配置文件
+          
+          # ============= 必填配置 =============
+          BAIDU_COOKIE = "${{ secrets.BAIDU_COOKIE }}"
+          
+          # ============= 可选配置 =============
+          PRIVACY_MODE = "true"
+          NOTIFY_METHOD = "${{ secrets.NOTIFY_METHOD || 'feishu' }}"
+          WEBHOOK_URL = "${{ secrets.WEBHOOK_URL }}"
+          EOF
+          cat config.py
 
       - name: Run checkin script
         run: |

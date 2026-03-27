@@ -12,7 +12,13 @@ import requests
 import random
 from datetime import datetime, timedelta
 
-
+# 从配置文件导入参数
+try:
+    from config import BAIDU_COOKIE, PRIVACY_MODE, NOTIFY_METHOD, WEBHOOK_URL
+    print("✅ 已加载config.py配置文件")
+except ImportError:
+    print("❌ 错误：请确保config.py文件存在且配置正确")
+    exit(1)
 
 # ---------------- 统一通知模块加载 ----------------
 hadsend = False
@@ -25,7 +31,7 @@ except ImportError:
     print("⚠️  未加载通知模块，跳过通知功能")
 
 # 配置项
-privacy_mode = os.getenv("PRIVACY_MODE", "true").lower() == "true"
+privacy_mode = PRIVACY_MODE.lower() == "true"
 
 HEADERS = {
     'Connection': 'keep-alive',
@@ -320,10 +326,7 @@ def main():
     
     # 显示配置状态
     print(f"🔒 隐私保护模式: {'已启用' if privacy_mode else '已禁用'}")
-    
-    # 读取环境变量
-    BAIDU_COOKIE = os.environ.get('BAIDU_COOKIE', '')
-    print(f"🔍 BAIDU_COOKIE 环境变量长度: {len(BAIDU_COOKIE)}")
+    print(f"🔍 BAIDU_COOKIE 配置长度: {len(BAIDU_COOKIE)}")
     
     # 获取Cookie配置
     baidu_cookies = BAIDU_COOKIE
