@@ -14,10 +14,16 @@ from datetime import datetime, timedelta
 
 # 从配置文件导入参数
 try:
+    import os
+    import sys
+    # 添加当前工作目录到模块搜索路径
+    sys.path.append(os.getcwd())
     from config import BAIDU_COOKIE, PRIVACY_MODE, NOTIFY_METHOD, WEBHOOK_URL
     print("✅ 已加载config.py配置文件")
 except ImportError:
     print("❌ 错误：请确保config.py文件存在且配置正确")
+    print(f"当前工作目录: {os.getcwd()}")
+    print(f"文件列表: {os.listdir('.')}")
     exit(1)
 
 # ---------------- 统一通知模块加载 ----------------
