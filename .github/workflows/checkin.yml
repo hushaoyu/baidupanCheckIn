@@ -31,17 +31,15 @@ jobs:
 
       - name: Create config.py from secrets
         run: |
-          cat > config.py << EOF
-          # 百度网盘签到配置文件
-          
-          # ============= 必填配置 =============
-          BAIDU_COOKIE = "${{ secrets.BAIDU_COOKIE }}"
-          
-          # ============= 可选配置 =============
-          PRIVACY_MODE = "true"
-          NOTIFY_METHOD = "${{ secrets.NOTIFY_METHOD || 'feishu' }}"
-          WEBHOOK_URL = "${{ secrets.WEBHOOK_URL }}"
-          EOF
+          echo '# 百度网盘签到配置文件' > config.py
+          echo '' >> config.py
+          echo '# ============= 必填配置 =============' >> config.py
+          echo "BAIDU_COOKIE = '${{ secrets.BAIDU_COOKIE }}'" >> config.py
+          echo '' >> config.py
+          echo '# ============= 可选配置 =============' >> config.py
+          echo "PRIVACY_MODE = 'true'" >> config.py
+          echo "NOTIFY_METHOD = '${{ secrets.NOTIFY_METHOD || 'feishu' }}'" >> config.py
+          echo "WEBHOOK_URL = '${{ secrets.WEBHOOK_URL }}'" >> config.py
           cat config.py
 
       - name: Run checkin script
