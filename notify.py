@@ -42,11 +42,15 @@ def send_wechat(webhook_url, report):
 
 def send(title, content):
     """统一发送通知函数，与run.py中的导入兼容"""
-    # 从环境变量读取通知配置
-    notify_method = os.environ.get('NOTIFY_METHOD', 'feishu')
-    webhook_url = os.environ.get('WEBHOOK_URL', '')
-    telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN', '')
-    telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID', '')
+    # 从配置文件读取通知配置
+    try:
+        from config import NOTIFY_METHOD, WEBHOOK_URL, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+    except ImportError:
+        # 回退到环境变量
+        notify_method = os.environ.get('NOTIFY_METHOD', 'feishu')
+        webhook_url = os.environ.get('WEBHOOK_URL', '')
+        telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+        telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID', '')
     
     # 构建报告内容
     report = f"{title}\n\n{content}"

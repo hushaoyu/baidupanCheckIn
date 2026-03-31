@@ -12,18 +12,16 @@ import requests
 import random
 from datetime import datetime, timedelta
 
-# 从配置文件导入参数
+# 从配置文件读取配置
 try:
-    import os
-    import sys
-    # 添加当前工作目录到模块搜索路径
-    sys.path.append(os.getcwd())
-    from config import BAIDU_COOKIE, PRIVACY_MODE, NOTIFY_METHOD, WEBHOOK_URL
-    print("✅ 已加载config.py配置文件")
+    from config import BAIDU_COOKIE, PRIVACY_MODE, NOTIFY_METHOD, WEBHOOK_URL, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+    print("✅ 已从配置文件加载配置")
+    print(f"🔍 BAIDU_COOKIE 长度: {len(BAIDU_COOKIE)}")
 except ImportError:
-    print("❌ 错误：请确保config.py文件存在且配置正确")
-    print(f"当前工作目录: {os.getcwd()}")
-    print(f"文件列表: {os.listdir('.')}")
+    print("❌ 错误：请复制 config.example.py 为 config.py 并填写你的配置信息")
+    exit(1)
+except Exception as e:
+    print(f"❌ 错误：读取配置文件失败 - {e}")
     exit(1)
 
 # ---------------- 统一通知模块加载 ----------------
