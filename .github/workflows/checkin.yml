@@ -31,21 +31,42 @@ jobs:
 
       - name: Create config.py from secrets
         run: |
-          cat > config.py << EOF
-          # 百度网盘签到配置文件
+          # 使用 Python 脚本来创建 config.py，以确保正确处理特殊字符
+          python3 -c "
+          import os
+          import json
           
-          # ============= 必填配置 =============
-          BAIDU_COOKIE = "${{ secrets.BAIDU_COOKIE }}"
+          # 从环境变量读取 secrets
+          secrets = {
+              'BAIDU_COOKIE': os.environ.get('BAIDU_COOKIE', ''),
+              'PRIVACY_MODE': 'true',
+              'NOTIFY_METHOD': os.environ.get('NOTIFY_METHOD', 'feishu'),
+              'WEBHOOK_URL': os.environ.get('WEBHOOK_URL', ''),
+              'TELEGRAM_BOT_TOKEN': os.environ.get('TELEGRAM_BOT_TOKEN', ''),
+              'TELEGRAM_CHAT_ID': os.environ.get('TELEGRAM_CHAT_ID', '')
+          }
           
-          # ============= 可选配置 =============
-          PRIVACY_MODE = "true"
-          NOTIFY_METHOD = "${{ secrets.NOTIFY_METHOD || 'feishu' }}"
-          WEBHOOK_URL = "${{ secrets.WEBHOOK_URL }}"
-          TELEGRAM_BOT_TOKEN = "${{ secrets.TELEGRAM_BOT_TOKEN }}"
-          TELEGRAM_CHAT_ID = "${{ secrets.TELEGRAM_CHAT_ID }}"
-          EOF
-          echo "=== config.py created ==="
-          echo "BAIDU_COOKIE length: ${#BAIDU_COOKIE}"
+          # 生成 config.py 内容
+          with open('config.py', 'w') as f:
+              f.write('# 百度网盘签到配置文件\n\n')
+              f.write('# ============= 必填配置 =============\n')
+              f.write(f"BAIDU_COOKIE = {json.dumps(secrets['BAIDU_COOKIE'])}\n\n")
+              f.write('# ============= 可选配置 =============\n')
+              f.write(f"PRIVACY_MODE = {json.dumps(secrets['PRIVACY_MODE'])}\n")
+              f.write(f"NOTIFY_METHOD = {json.dumps(secrets['NOTIFY_METHOD'])}\n")
+              f.write(f"WEBHOOK_URL = {json.dumps(secrets['WEBHOOK_URL'])}\n")
+              f.write(f"TELEGRAM_BOT_TOKEN = {json.dumps(secrets['TELEGRAM_BOT_TOKEN'])}\n")
+              f.write(f"TELEGRAM_CHAT_ID = {json.dumps(secrets['TELEGRAM_CHAT_ID'])}\n")
+          
+          print('=== config.py created ===')
+          print(f'BAIDU_COOKIE length: {len(secrets["BAIDU_COOKIE"])}')
+          ""
+        env:
+          BAIDU_COOKIE: ${{ secrets.BAIDU_COOKIE }}
+          NOTIFY_METHOD: ${{ secrets.NOTIFY_METHOD || 'feishu' }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       - name: Run checkin script
         run: |

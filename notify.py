@@ -45,6 +45,10 @@ def send(title, content):
     # 从配置文件读取通知配置
     try:
         from config import NOTIFY_METHOD, WEBHOOK_URL, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+        notify_method = NOTIFY_METHOD
+        webhook_url = WEBHOOK_URL
+        telegram_bot_token = TELEGRAM_BOT_TOKEN
+        telegram_chat_id = TELEGRAM_CHAT_ID
     except ImportError:
         # 回退到环境变量
         notify_method = os.environ.get('NOTIFY_METHOD', 'feishu')
