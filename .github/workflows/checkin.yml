@@ -32,7 +32,7 @@ jobs:
       - name: Create config.py from secrets
         run: |
           # 使用 Python 脚本来创建 config.py，以确保正确处理特殊字符
-          python3 -c "
+          cat > create_config.py << 'EOF'
           import os
           import json
           
@@ -60,7 +60,10 @@ jobs:
           
           print('=== config.py created ===')
           print(f'BAIDU_COOKIE length: {len(secrets["BAIDU_COOKIE"])}')
-          ""
+          EOF
+          
+          python3 create_config.py
+          rm create_config.py
         env:
           BAIDU_COOKIE: ${{ secrets.BAIDU_COOKIE }}
           NOTIFY_METHOD: ${{ secrets.NOTIFY_METHOD || 'feishu' }}
